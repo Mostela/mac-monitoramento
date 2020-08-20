@@ -1,0 +1,31 @@
+---
+## baixa o promethues
+## configura o grupo e usuario dele
+## instala ele
+## Chama handless para ativar
+
+- name: "Promethues config"
+
+- name: "Baixa o Promethues"
+  get_url: 
+    url: https://github.com/prometheus/prometheus/releases/download/v2.20.1/prometheus-2.20.1.linux-amd64.tar.gz
+    dest: ./prometheus-2.20.1.linux-amd64.tar.gz
+
+- name: "Desenpacota o arquivo"
+  unarchive:
+    src: ./prometheus-2.20.1.linux-amd64.tar.gz
+    dest: ./
+    extra_opts:
+      - xvfz
+
+- name: "Remove o tar.gz"
+  file:
+    path: ./prometheus-2.20.1.linux-amd64.tar.gz
+    state: absent
+
+- name: "Cria um grupo de usuario"
+
+- name: "Adiciona usuario"
+
+# Roda o promethues pela bin
+- name: "Coloca o promethues na pasta bin"

@@ -1,0 +1,4 @@
+- name: "Remove dependencias não usadas"
+  apt: 
+    autoremove: yes
+    autoclean: yes

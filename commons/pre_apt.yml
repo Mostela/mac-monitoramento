@@ -1,0 +1,11 @@
+---
+- name: "Atualiza o apt"
+  apt:
+    upgrade: dist
+    cache_valid_time: 3600
+
+# - name: "Instala modulos"
+#  apt:
+#    name: {{ item }}
+#  loop:
+#    - curl

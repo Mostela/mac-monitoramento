@@ -1,0 +1,20 @@
+---
+- name: "Maquina de Monitoramento"
+  hosts:
+    all
+    # Ip Maquina
+
+  become: true
+  become_method: sudo
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+  #remote_user: joaocamargo812
+
+  pre_tasks:
+    - import_tasks: "./commons/pre_apt.yml"
+
+  tasks:
+    - import_tasks: "./roles/prometheus.yml"
+
+#  post_tasks:
+#    - []

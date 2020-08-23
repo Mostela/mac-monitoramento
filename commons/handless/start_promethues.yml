@@ -1,3 +1,0 @@
----
-- name: "Inicia serviço do promethues"
-  shell: echo 'Não preparado'

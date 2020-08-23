@@ -1,0 +1,23 @@
+---
+- name: "Obtem Node Exporter"
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: yes
+    owner: root
+- name: "node_exporter para Local Bin"
+  copy:
+    remote_src: yes
+    src: /tmp/node_exporter-1.0.1.linux-amd64/node_exporter
+    dest: /usr/local/bin/
+    owner: prometheus
+    group: prometheus
+    mode: +x
+
+- name: "Serviço para a pasta"
+  copy:
+    src: "../service/node_exporter.service"
+    dest: "/etc/systemd/system/node_exporter.service"
+    remote_src: no
+    owner: prometheus
+    group: prometheus

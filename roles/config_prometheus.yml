@@ -1,0 +1,15 @@
+- name: "Copia arquivo de configuraçao do prometheus"
+  copy:
+    src: "../config/"
+    dest: "/etc/prometheus/"
+    remote_src: no
+    owner: prometheus
+    group: prometheus
+
+- name: "Serviço para a pasta"
+  copy:
+    src: "../service/prometheus.service"
+    dest: "/etc/systemd/system/prometheus.service"
+    remote_src: no
+    owner: prometheus
+    group: prometheus

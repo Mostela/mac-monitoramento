@@ -1,31 +1,83 @@
 ---
-## baixa o promethues
-## configura o grupo e usuario dele
-## instala ele
-## Chama handless para ativar
+- name: "Cria um grupo de usuarios"
+  group:
+    name: prometheus
+    system: true
+    state: present
 
-- name: "Promethues config"
+- name: "Cria o usuario prometheus no grupo"
+  user:
+    name: prometheus
+    shell: /bin/bash
+    groups: prometheus
 
-- name: "Baixa o Promethues"
-  get_url: 
-    url: https://github.com/prometheus/prometheus/releases/download/v2.20.1/prometheus-2.20.1.linux-amd64.tar.gz
-    dest: ./prometheus-2.20.1.linux-amd64.tar.gz
+- name: "Prepara pastas e baixa o Prometheus"
+  block:
+  - name: "Cria pasta Promethues"
+    file:
+      path: /etc/prometheus
+      state: directory
+      mode: '0755'
 
-- name: "Desenpacota o arquivo"
-  unarchive:
-    src: ./prometheus-2.20.1.linux-amd64.tar.gz
-    dest: ./
-    extra_opts:
-      - xvfz
+  - name: "Cria pasta Promethues para as libs"
+    file:
+      path: /var/lib/prometheus
+      state: directory
+      mode: '0755'
+      owner: prometheus
+      group: prometheus
 
-- name: "Remove o tar.gz"
-  file:
-    path: ./prometheus-2.20.1.linux-amd64.tar.gz
-    state: absent
+  - name: "Obtem o prometheus"
+    unarchive:
+      src: "https://github.com/prometheus/prometheus/releases/download/v2.20.1/prometheus-2.20.1.linux-amd64.tar.gz"
+      dest: /tmp
+      remote_src: yes
+      owner: root
 
-- name: "Cria um grupo de usuario"
+  - name: "Coloca Prometheus na usr/local/bin"
+    copy:
+      remote_src: yes
+      src: /tmp/prometheus-2.20.1.linux-amd64/prometheus
+      dest: /usr/local/bin/
+      owner: prometheus
+      group: prometheus
+      mode: +x
 
-- name: "Adiciona usuario"
+  - name: "Coloca promtool na usr/local/bin"
+    copy:
+      remote_src: yes
+      src: /tmp/prometheus-2.20.1.linux-amd64/promtool
+      dest: /usr/local/bin/
+      owner: prometheus
+      group: prometheus
+      mode: +x
 
-# Roda o promethues pela bin
-- name: "Coloca o promethues na pasta bin"
+  - name: "Coloca o console na /etc/prometheus"
+    copy:
+      remote_src: yes
+      src: /tmp/prometheus-2.20.1.linux-amd64/consoles
+      dest: /etc/prometheus
+
+  - name: "Coloca o console na /etc/prometheus"
+    copy:
+      remote_src: yes
+      src: /tmp/prometheus-2.20.1.linux-amd64/console_libraries
+      dest: /etc/prometheus
+
+- import_tasks: "./roles/config_prometheus.yml"
+
+- import_tasks: "./roles/node_exporter.yml"
+
+- name: "Altera configuraçao"
+  systemd:
+    daemon_reload: yes
+
+- name: "Inicia serviço Prometheus"
+  systemd:
+    state: started
+    name: prometheus
+
+- name: "Inicia serviço node_exporter - Prometheus"
+  systemd:
+    state: started
+    name: node_exporter

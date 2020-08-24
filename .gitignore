@@ -2,3 +2,9 @@
 .idea
 /.vagrant/
 /ubuntu-xenial-16.04-cloudimg-console.log
+
+account.json
+.terraform
+.terraform/plugins/registry.terraform.io/hashicorp/google/3.35.0/linux_amd64/terraform-provider-google_v3.35.0_x5
+
+.terraform/plugins/selections.json
